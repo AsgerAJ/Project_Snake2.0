@@ -5,7 +5,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -25,40 +24,85 @@ public class Model extends Application {
     private Rectangle snake;
     private Direction direction;
     private Line gridLine;
+    private Rectangle bg;
 
-    public static void main(String[] args) {
+    public static int step = 10;
+    public static int n = 0;
+    public static int m = 0;
+    public static Scene scene;
+
+    public void main(String[] args) {
         launch(args);
     }
 
     public void drawGrid(int x, int y) {
         for (int i = 0; i < x / 10; i++) {
-            Line line = new Line(i * 10, 0, i * 10, y);
-            line.setFill(Color.BLACK);
-            root.getChildren().add(line);
-
             for (int j = 0; j < y; j++) {
-                line = new Line(0, j * 10, y, j*10);
-                line.setFill(Color.BLACK);
-                root.getChildren().add(line);
+                Rectangle back = new Rectangle(i * 10, j * 10, 10, 10);
+                if (((i % 2 == 0) && (j % 2 == 0)) || ((i % 2 != 0) && (j % 2 != 0))) {
+                    back.setFill(Color.LIGHTGREEN);
+                } else {
+                    back.setFill(Color.GREEN);
+                }
+                root.getChildren().add(back);
             }
         }
     }
 
-    public void drawFood(int x, int y){
-        Circle food = new Circle(x, y, 5);
+    public void newFood(int x, int y) {
+        Circle food = new Circle(x - 5, y - 5, 5);
         food.setFill(Color.RED);
         root.getChildren().add(food);
     }
 
-    public void drawSnake(int x, int y){
-        x = x/2;
-        y = y/2;
+    public void newSnake(int x, int y, int length) {
+        x = x / 2;
+        y = y / 2;
         ArrayList<Rectangle> snake = new ArrayList<>();
-        snake.add(new Rectangle(x, y, 10, 10));
-        snake.add(new Rectangle(x, y+10, 10,10));
-        for (int i = 0; i < 2; i++){
+        for (int i = 0; i < length; i++) {
+            snake.add(new Rectangle(x, y + (i * 10), 10, 10));
             snake.get(i).setFill(Color.BLACK);
             root.getChildren().add(snake.get(i));
+        }
+    }
+
+    public void updateSnake(Direction direction) {
+        switch (direction) {
+            case Up:
+                if (snake.getY() - step < 0) {
+                    snake.setY(m - 10);
+                } else {
+                    snake.setY(snake.getY() - step);
+                }
+
+                break;
+
+            case Left:
+                if (snake.getX() - step < 0) {
+                    snake.setX(n - 10);
+                } else {
+                    snake.setX(snake.getX() - step);
+                }
+                break;
+
+            case Right:
+                if (snake.getX() + step > n - 10) {
+                    snake.setX(0);
+                } else {
+                    snake.setX(snake.getX() + step);
+                }
+                break;
+
+            case Down:
+                if (snake.getY() + step > m - 10) {
+                    snake.setY(0);
+                } else {
+                    snake.setY(snake.getY() + step);
+                }
+                break;
+
+            default:
+                break;
         }
     }
 
@@ -68,12 +112,11 @@ public class Model extends Application {
 
         System.out.println("Please enter the dimensions of the snake game: (n x m)");
         System.out.print("n = ");
-        int n = 50;// console.nextInt()*10;
+        int n = 500;// console.nextInt()*10;
         System.out.println();
         System.out.print("m = ");
-        int m = 40;// console.nextInt()*10;
+        int m = 500;// console.nextInt()*10;
         int radius = 10;
-        int step = 10;
 
         root = new Pane();
         root.setPrefSize(n, m);
@@ -81,9 +124,43 @@ public class Model extends Application {
         direction = Direction.Left;
 
         drawGrid(n, m);
-        drawFood(20, 20);
-        drawSnake(n, m);
+        newFood(20, 20);
+        newSnake(n, m, 1);
+
+        Runnable r = () -> {
+            try {
+                for (;;) {
+                    updateSnake(direction);
+                    Thread.sleep(100);
+                }
+            } catch (InterruptedException ie) {
+            }
+        };
+
+
+
         Scene scene = new Scene(root, 500, 500);
+
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            KeyCode input = event.getCode();
+            switch (input) {
+                case W:
+                    direction = Direction.Up;
+                    break;
+                case A:
+                    direction = Direction.Left;
+                    break;
+                case S:
+                    direction = Direction.Down;
+                    break;
+                case D:
+                    direction = Direction.Right;
+                    break;
+                default:
+                    break;
+            }
+        });
+
 
         primaryStage.setTitle("Snake");
         primaryStage.setScene(scene);
