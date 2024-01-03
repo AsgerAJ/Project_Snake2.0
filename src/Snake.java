@@ -25,7 +25,7 @@ public class Snake extends Rectangle {
     private int yLim;
 
     public Snake(int x, int y, double cS, int snakeLength, Direction currentDirection) {
-        super((x / 2) * cS - cS, ((y / 2)) * cS - cS,cS, cS);
+        super((x / 2) * cS - cS, ((y / 2)) * cS - cS, cS, cS);
         this.cS = cS;
         this.xLim = x;
         this.yLim = y;
@@ -41,38 +41,50 @@ public class Snake extends Rectangle {
         this.currentDirection = currentDirection;
     }
 
-    public Direction getCurrDir(){
+    public Direction getCurrDir() {
         return this.currentDirection;
     }
 
-    public int getXLim(){
+    public int getXLim() {
         return this.xLim;
     }
 
-    public int getYLim(){
+    public int getYLim() {
         return this.yLim;
     }
 
-    public void update(Direction direction){
+    public void update(Direction direction) {
         switch (direction) {
             case Up:
-                if(getY() - cS < 0){
-                    setY(getYLim()*cS);
-                }else{
+                if (getY() - cS < 0) {
+                    setY(getYLim() * cS - cS);
+                } else {
                     setY(getY() - cS);
                 }
                 break;
-            
+
             case Left:
-                setX(getX() - cS);
+                if (getX() - cS < 0) {
+                    setX(getXLim() * cS - cS);
+                } else {
+                    setX(getX() - cS);
+                }
                 break;
 
             case Right:
-                setX(getX() + cS);
+                if (getX() + cS > getYLim() * cS - cS) {
+                    setX(0);
+                } else {
+                    setX(getX() + cS);
+                }
                 break;
 
             case Down:
-                setY(getY() + cS);
+                if (getY() + cS > getYLim() * cS - cS) {
+                    setY(0);
+                } else {
+                    setY(getY() + cS);
+                }
                 break;
             default:
                 break;

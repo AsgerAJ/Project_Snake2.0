@@ -73,10 +73,10 @@ public class Model extends Application {
 
         // System.out.println("Please enter the dimensions of the snake game: (n x m)");
         // System.out.print("n = ");
-        int n = 50; // console.nextInt();
+        int n = 10; // console.nextInt();
         // System.out.println();
         // System.out.print("m = ");
-        int m = 50; // console.nextInt();
+        int m = 10; // console.nextInt();
         int radius = 10;
         int step = 10;
 
@@ -99,7 +99,6 @@ public class Model extends Application {
                 case UP:
                     if (snake.getCurrDir() != Direction.Down) {
                         snake.setCurrentDirection(Direction.Up);
-
                     }
                     break;
                 case DOWN:
