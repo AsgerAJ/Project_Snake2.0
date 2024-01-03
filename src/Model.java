@@ -31,8 +31,9 @@ public class Model extends Application {
     public static int m = 0;
     public static Scene scene;
 
-    public void main(String[] args) {
+    public static void main(String[] args) {
         launch(args);
+        boolean alive = true;
     }
 
     public void drawGrid(int x, int y) {
@@ -126,19 +127,6 @@ public class Model extends Application {
         drawGrid(n, m);
         newFood(20, 20);
         newSnake(n, m, 1);
-
-        Runnable r = () -> {
-            try {
-                for (;;) {
-                    updateSnake(direction);
-                    Thread.sleep(100);
-                }
-            } catch (InterruptedException ie) {
-            }
-        };
-
-
-
         Scene scene = new Scene(root, 500, 500);
 
         scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
@@ -160,8 +148,6 @@ public class Model extends Application {
                     break;
             }
         });
-
-
         primaryStage.setTitle("Snake");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
