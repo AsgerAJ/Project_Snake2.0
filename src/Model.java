@@ -2,6 +2,7 @@
 //javafx import
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -23,6 +24,8 @@ public class Model extends Application {
 
     public double scalingConstant;
     public double positioncorrection;
+    public double foodX;
+    public double foodY;
 
     public static void main(String[] args) {
         launch(args);
@@ -48,22 +51,42 @@ public class Model extends Application {
         }
     }
 
-    public void newFood(double x, double y) {
-        System.out.println(x + ", " + y);
-        Rectangle food = new Rectangle((x / 2) * scalingConstant,((y / 2)) * scalingConstant, scalingConstant, scalingConstant);
+    public void removeBox(Rectangle box) {
+        root.getChildren().remove(box);
+    }
+
+    public void newFood(int x, int y) {
+        Random rand = new Random();
+        int randX = rand.nextInt(x);
+        int randY = rand.nextInt(y);
+        food = new Rectangle((randX / 2) * scalingConstant, ((randY / 2)) * scalingConstant, scalingConstant,
+                scalingConstant);
         food.setFill(Color.RED);
+        foodX = food.getX();
+        foodY = food.getY();
         food.setArcHeight(scalingConstant);
         food.setArcWidth(scalingConstant);
         root.getChildren().add(food);
     }
 
     public void newSnake(int x, int y) {
-        snake = new Snake(x, y, scalingConstant, 2, Direction.Up);
+        snake = new Snake(x, y, scalingConstant, 2, Direction.Up, 1);
         root.getChildren().add(snake);
+        // snake.eat(food);
     }
 
-    public boolean collision() {
-        return food.intersects(snake.getBoundsInLocal());
+    public void moveDelay(int x, int y) {
+        Platform.runLater(() -> {
+            snake.update(snake.getCurrDir());
+            if(collision()){
+                snake.eat(food);
+                newFood(x, y);
+            }
+        });
+    }
+
+    private boolean collision() {
+        return (foodX == snake.getX() && foodY == snake.getY());
     }
 
     @Override
@@ -81,35 +104,27 @@ public class Model extends Application {
 
         root = new Pane();
         root.setPrefSize(n, m);
-        Random rand = new Random();
         direction = Direction.Left;
 
         drawGrid(n, m);
-        newFood(2, 2);
+        newFood(n, m);
         newSnake(n, m);
 
         /*
          * Debug variables
          */
-        System.out.println(positioncorrection);
-        System.out.println(scalingConstant);
+        // System.out.println(positioncorrection);
+        // System.out.println(scalingConstant);
 
         /*
          * Movement thread
          */
         Runnable game = () -> {
+
             try {
                 while (true) {
-                    snake.moveDelay();
+                    moveDelay(n, m);
                     Thread.sleep(100);
-                    try {
-                        if (collision()) {
-                            snake.eat(food);
-                            newFood(rand.nextInt(n), rand.nextInt(m));
-                        }
-                    } catch (NullPointerException e) {
-                    }
-
                 }
             } catch (InterruptedException ie) {
             }
@@ -142,7 +157,6 @@ public class Model extends Application {
                     break;
 
                 case SPACE:
-                    snake.update(snake.getCurrDir());
                     break;
                 default:
                     break;

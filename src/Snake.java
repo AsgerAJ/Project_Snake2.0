@@ -1,7 +1,14 @@
 import javafx.application.Platform;
 import javafx.scene.shape.Rectangle;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.scene.input.*;
 
-import java.awt.Color;
 import java.util.*;
 
 public class Snake extends Rectangle {
@@ -14,24 +21,18 @@ public class Snake extends Rectangle {
     private int xLim;
     private int yLim;
     private int score;
+    private int playerNumber;
 
-    public Snake(int x, int y, double cS, int length, Direction currentDirection) {
+    public Snake(int x, int y, double cS, int length, Direction currentDirection, int playerNumber) {
         super((x / 2) * cS - cS, ((y / 2)) * cS - cS, cS, cS);
         this.cS = cS;
         this.xLim = x;
         this.yLim = y;
-        System.out.println( xLim* cS+" ; "+ yLim * cS);
+        //.println(xLim * cS + " ; " + yLim * cS);
         this.bodyParts = new ArrayList<>();
         this.currentDirection = Direction.Up;
-        this.score = 0;
-    }
-
-    public void eat(Rectangle food) {
-        System.out.println("Nom nom nom");
-        Rectangle body = lastBody();
-        food.setX(getX());
-        food.setY(getY());
-        bodyParts.add(getLen(),food);
+        this.score = 1;
+        this.playerNumber = playerNumber;
     }
 
     public void setCurrentDirection(Direction currentDirection) {
@@ -39,7 +40,7 @@ public class Snake extends Rectangle {
     }
 
     public Direction getCurrDir() {
-        return this.currentDirection;
+        return currentDirection;
     }
 
     public int getXLim() {
@@ -50,12 +51,16 @@ public class Snake extends Rectangle {
         return this.yLim;
     }
 
-    public int getLen(){
+    public int getLen() {
         return this.bodyParts.size();
     }
 
+    public void setScore(){
+        this.score = score+1;
+    }
+
     public void update(Direction direction) {
-        for (int i = getLen() - 1; i >= 0; i--) {
+        for (int i = getLen()-1; i >= 0; i--) {
             if (i == 0) {
                 bodyParts.get(i).setX(getX());
                 bodyParts.get(i).setY(getY());
@@ -102,20 +107,24 @@ public class Snake extends Rectangle {
         }
     }
 
-    public void moveDelay(){
-        Platform.runLater(()->{
-            update(currentDirection);
-        });
-    }
 
-    private Rectangle lastBody(){
-        if(getLen()==0){
+
+    private Rectangle lastBody() {
+        if (score == 1) {
             return this;
-        }else{
-            return bodyParts.get(getLen());
+        } else {
+            return bodyParts.get(score - 1);
         }
     }
 
-
-
+    public void eat(Rectangle food) {
+        System.out.println("Nom nom nom");
+        Rectangle body = lastBody();
+        food.setX(getX());
+        food.setY(getY());
+        food.setArcHeight(0);
+        food.setArcWidth(0);
+        food.setFill(Color.BLACK);
+        bodyParts.add(getLen(), food);
+    }
 }
