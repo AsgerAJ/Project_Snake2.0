@@ -17,7 +17,7 @@ public class Snake extends Rectangle {
     private Direction currentDirection;
     private Rectangle head;
     private double cS;
-    private int length = 2;
+    private int length = 0;
     private int xLim;
     private int yLim;
     private int score;
@@ -59,14 +59,24 @@ public class Snake extends Rectangle {
         this.score = score+1;
     }
 
+    public boolean selfCollide(){
+        boolean dead = false;
+        for (int i = 0; i < length; i++){
+            if((bodyParts.get(i).getX()==getX()) && (bodyParts.get(i).getY()==getY()) ){
+                return dead = true;
+            }
+        }
+        return dead;
+    }
+
     public void update(Direction direction) {
-        for (int i = getLen()-1; i >= 0; i--) {
+        for (int i = length - 1; i >= 0; i--) {
             if (i == 0) {
                 bodyParts.get(i).setX(getX());
                 bodyParts.get(i).setY(getY());
             } else {
                 bodyParts.get(i).setX(bodyParts.get(i - 1).getX());
-                bodyParts.get(i).setX(bodyParts.get(i - 1).getY());
+                bodyParts.get(i).setY(bodyParts.get(i - 1).getY());
             }
         }
 
@@ -110,10 +120,11 @@ public class Snake extends Rectangle {
 
 
     private Rectangle lastBody() {
-        if (score == 1) {
+        if (length == 0) {
             return this;
         } else {
-            return bodyParts.get(score - 1);
+            return bodyParts.get(length - 1);
+
         }
     }
 
@@ -125,6 +136,6 @@ public class Snake extends Rectangle {
         food.setArcHeight(0);
         food.setArcWidth(0);
         food.setFill(Color.BLACK);
-        bodyParts.add(getLen(), food);
+        bodyParts.add(length++, food);
     }
 }

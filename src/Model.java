@@ -72,7 +72,8 @@ public class Model extends Application {
     public void newSnake(int x, int y) {
         snake = new Snake(x, y, scalingConstant, 2, Direction.Up, 1);
         root.getChildren().add(snake);
-        // snake.eat(food);
+        snake.eat(food);
+        newFood(x, y);
     }
 
     public void moveDelay(int x, int y) {
@@ -81,6 +82,9 @@ public class Model extends Application {
             if(collision()){
                 snake.eat(food);
                 newFood(x, y);
+            }else if(snake.selfCollide()){
+                root.getChildren().clear();
+                drawGrid(x, y);
             }
         });
     }
@@ -95,7 +99,7 @@ public class Model extends Application {
 
         // System.out.println("Please enter the dimensions of the snake game: (n x m)");
         // System.out.print("n = ");
-        int n = 17; // console.nextInt();
+        int n = 19; // console.nextInt();
         // System.out.println();
         // System.out.print("m = ");
         int m = 19; // console.nextInt();
@@ -124,7 +128,7 @@ public class Model extends Application {
             try {
                 while (true) {
                     moveDelay(n, m);
-                    Thread.sleep(100);
+                    Thread.sleep(50);
                 }
             } catch (InterruptedException ie) {
             }
