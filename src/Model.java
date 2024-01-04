@@ -59,8 +59,9 @@ public class Model extends Application {
         Random rand = new Random();
         int randX = rand.nextInt(x);
         int randY = rand.nextInt(y);
-        food = new Rectangle((randX / 2) * scalingConstant, ((randY / 2)) * scalingConstant, scalingConstant,
-                scalingConstant);
+        boolean goodFood = false;
+        
+        food = new Rectangle((randX / 2) * scalingConstant, ((randY / 2)) * scalingConstant, scalingConstant,scalingConstant);
         food.setFill(Color.RED);
         foodX = food.getX();
         foodY = food.getY();
@@ -72,17 +73,17 @@ public class Model extends Application {
     public void newSnake(int x, int y) {
         snake = new Snake(x, y, scalingConstant, 2, Direction.Up, 1);
         root.getChildren().add(snake);
-        snake.eat(food);
         newFood(x, y);
+        snake.eat(food);
     }
 
     public void moveDelay(int x, int y) {
         Platform.runLater(() -> {
             snake.update(snake.getCurrDir());
-            if(collision()){
+            if (collision()) {
                 snake.eat(food);
                 newFood(x, y);
-            }else if(snake.selfCollide()){
+            } else if (snake.selfCollide()) {
                 root.getChildren().clear();
                 drawGrid(x, y);
             }
@@ -111,8 +112,8 @@ public class Model extends Application {
         direction = Direction.Left;
 
         drawGrid(n, m);
-        newFood(n, m);
         newSnake(n, m);
+        newFood(n, m);
 
         /*
          * Debug variables
@@ -124,7 +125,6 @@ public class Model extends Application {
          * Movement thread
          */
         Runnable game = () -> {
-
             try {
                 while (true) {
                     moveDelay(n, m);

@@ -69,6 +69,10 @@ public class Snake extends Rectangle {
         return dead;
     }
 
+    public ArrayList<Rectangle> getBody(){
+        return this.bodyParts;
+    }
+
     public void update(Direction direction) {
         for (int i = length - 1; i >= 0; i--) {
             if (i == 0) {
@@ -129,7 +133,6 @@ public class Snake extends Rectangle {
     }
 
     public void eat(Rectangle food) {
-        System.out.println("Nom nom nom");
         Rectangle body = lastBody();
         food.setX(getX());
         food.setY(getY());
