@@ -72,10 +72,10 @@ public class Model extends Application {
 
         // System.out.println("Please enter the dimensions of the snake game: (n x m)");
         // System.out.print("n = ");
-        int n = 10; // console.nextInt();
+        int n = 17; // console.nextInt();
         // System.out.println();
         // System.out.print("m = ");
-        int m = 10; // console.nextInt();
+        int m = 19; // console.nextInt();
         int radius = 10;
         int step = 10;
 

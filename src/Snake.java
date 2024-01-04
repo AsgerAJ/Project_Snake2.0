@@ -20,6 +20,7 @@ public class Snake extends Rectangle {
         this.cS = cS;
         this.xLim = x;
         this.yLim = y;
+        System.out.println( xLim* cS+" ; "+ yLim * cS);
         this.bodyParts = new ArrayList<>();
         this.currentDirection = Direction.Up;
         this.score = 0;
@@ -82,7 +83,7 @@ public class Snake extends Rectangle {
                 break;
 
             case Right:
-                if (getX() + cS > getYLim() * cS - cS) {
+                if (getX() + cS > getXLim() * cS - cS) {
                     setX(0);
                 } else {
                     setX(getX() + cS);
