@@ -5,13 +5,9 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
 
@@ -20,7 +16,7 @@ import java.util.*;
 public class Model extends Application {
 
     private Pane root;
-    private Circle food;
+    private Rectangle food;
     private Snake snake;
     private Direction direction;
     private Rectangle back;
@@ -54,21 +50,24 @@ public class Model extends Application {
 
     public void newFood(double x, double y) {
         System.out.println(x + ", " + y);
-        Circle food = new Circle(x * scalingConstant - scalingConstant / 2, y * scalingConstant - scalingConstant / 2,
-                scalingConstant / 2);
+        Rectangle food = new Rectangle((x / 2) * scalingConstant,((y / 2)) * scalingConstant, scalingConstant, scalingConstant);
         food.setFill(Color.RED);
+        food.setArcHeight(scalingConstant);
+        food.setArcWidth(scalingConstant);
         root.getChildren().add(food);
     }
 
     public void newSnake(int x, int y) {
-        System.out.println();
         snake = new Snake(x, y, scalingConstant, 2, Direction.Up);
         root.getChildren().add(snake);
-        snake.eat();
+    }
+
+    public boolean collision() {
+        return food.intersects(snake.getBoundsInLocal());
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws InterruptedException {
         Scanner console = new Scanner(System.in);
 
         // System.out.println("Please enter the dimensions of the snake game: (n x m)");
@@ -86,10 +85,35 @@ public class Model extends Application {
         direction = Direction.Left;
 
         drawGrid(n, m);
-        System.out.println(scalingConstant);
         newFood(2, 2);
-        System.out.println(positioncorrection);
         newSnake(n, m);
+
+        /*
+         * Debug variables
+         */
+        System.out.println(positioncorrection);
+        System.out.println(scalingConstant);
+
+        /*
+         * Movement thread
+         */
+        Runnable game = () -> {
+            try {
+                while (true) {
+                    snake.moveDelay();
+                    Thread.sleep(100);
+                    try {
+                        if (collision()) {
+                            snake.eat(food);
+                            newFood(rand.nextInt(n), rand.nextInt(m));
+                        }
+                    } catch (NullPointerException e) {
+                    }
+
+                }
+            } catch (InterruptedException ie) {
+            }
+        };
 
         Scene scene = new Scene(root, 500, 500);
 
@@ -119,8 +143,7 @@ public class Model extends Application {
 
                 case SPACE:
                     snake.update(snake.getCurrDir());
-                    System.out.println(snake.getCurrDir());
-                        break;
+                    break;
                 default:
                     break;
             }
@@ -130,5 +153,8 @@ public class Model extends Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
+        Thread gameThread = new Thread(game);
+        gameThread.setDaemon(true);
+        gameThread.start();
     }
 }
