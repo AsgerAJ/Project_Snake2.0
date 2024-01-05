@@ -161,14 +161,12 @@ public class GameRunner extends Application {
                 randX = rand.nextInt(n);
                 randY = rand.nextInt(m);
                 for (int i = 0; i < snake.getLength(); i++) {
-                    System.out.println(String.valueOf(snake.get(i).getX() / scalingConstant) + ", " + String.valueOf(snake.get(i).getY() / scalingConstant));
                     if (snake.get(i).getX() / scalingConstant == randX
                     && snake.get(i).getY() / scalingConstant == randY) {
                         validSpawn = false;
                     }
                 }
             }
-            System.out.println(String.valueOf(randX) + ", " + String.valueOf(randY));
             food.setXY(randX + 1, randY + 1);
             eat();
         }

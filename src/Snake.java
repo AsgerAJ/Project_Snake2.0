@@ -87,7 +87,7 @@ public class Snake extends ArrayList<Rectangle> {
         if (food.getX()==get(0).getX() && food.getY() == get(0).getY()) {
             return true;
         }
-    return false;
+        return false;
     }
 
     public boolean selfCollide(){
