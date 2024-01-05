@@ -15,7 +15,6 @@ public class Food extends Rectangle {
         super(x*scalingConstant-scalingConstant, y*scalingConstant-scalingConstant, scalingConstant, scalingConstant);
         super.setArcHeight(scalingConstant);
         super.setArcWidth(scalingConstant);
-        super.setFill(Color.rgb(255,200,87));
         this.scalingConstant = scalingConstant;
     }
 
@@ -26,7 +25,6 @@ public class Food extends Rectangle {
     public void setXY(int x, int y){
         setX(x*scalingConstant-scalingConstant);
         setY(y*scalingConstant-scalingConstant);
-        System.out.println(x + " : " + y);
     }
 
 }

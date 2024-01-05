@@ -37,14 +37,52 @@ public class GameRunner extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         System.out.println("Welcome to the snake game");
+        Scanner console = new Scanner(System.in);
 
-        n = 20;
-        m = 20;
+        boolean nSet = false;
+        while (!nSet) {
+            if (n > 5 && n < 100) {
+                nSet = true;
+                break;
+            } else {
+                System.out.print("Please enter the size of the n axis (greater than 5 & lesser than 100): ");
+            }
+            String gridsizeString = console.next();
+            try {
+                n = Integer.valueOf(gridsizeString) * 1;
+            } catch (NumberFormatException e) {
+                n = 1;
+            }
+
+        }
+        boolean mSet = false;
+        while (!mSet) {
+            if (m > 5 && m < 100) {
+                nSet = true;
+                break;
+            } else {
+                System.out.print("Please enter the size of the m axis (greater than 5 & lesser than 100): ");
+            }
+            String gridsizeString = console.next();
+            try {
+                m = Integer.valueOf(gridsizeString) * 1;
+            } catch (NumberFormatException e) {
+                m = 1;
+            }
+
+        }
+
+        if (n > m) {
+            scalingConstant = 500 / (n);
+        } else {
+            scalingConstant = 500 / (m);
+        }
 
         root = new Pane();
         root.setPrefSize(n, m);
+        Random foodCord = new Random();
 
-        drawGrid(n, m);
+        // Skal skrives ting til random koordinater
         food = new Food(2, 2, scalingConstant);
         drawFood(food);
         snake = new Snake(n, m, scalingConstant, Direction.Stop, 0, 2);
@@ -54,51 +92,40 @@ public class GameRunner extends Application {
         height = scalingConstant * m;
         Scene scene = new Scene(root, width, height);
 
-        Runnable snakeStepper = () -> {
-            try {
-                while (true) {
-                    stepHandler(snake);
-                    Collections.rotate(snake, 1);
-                    Thread.sleep(100);
-                }
-
-            } catch (InterruptedException ie) {
-            }
-        };
-
         scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             KeyCode code = event.getCode();
             KeyCode last = code;
             KeyCode last2 = last;
             switch (code) {
                 case UP:
-                    if (snake.getDirr() != Direction.Down) {
+                    if (snake.getDirr() != Direction.Down && snake.getAlive()) {
                         snake.setCurrentDirection(Direction.Up);
+                        stepHandler(snake);
+                        Collections.rotate(snake, 1);
                     }
                     break;
                 case DOWN:
-                    if (snake.getDirr() != Direction.Up) {
+                    if (snake.getDirr() != Direction.Up && snake.getAlive()) {
                         snake.setCurrentDirection(Direction.Down);
+                        stepHandler(snake);
+                        Collections.rotate(snake, 1);
                     }
                     break;
                 case LEFT:
-                    if (snake.getDirr() != Direction.Right) {
+                    if (snake.getDirr() != Direction.Right && snake.getAlive()) {
                         snake.setCurrentDirection(Direction.Left);
+                        stepHandler(snake);
+                        Collections.rotate(snake, 1);
                     }
                     break;
                 case RIGHT:
-                    if (snake.getDirr() != Direction.Left) {
+                    if (snake.getDirr() != Direction.Left && snake.getAlive()) {
                         snake.setCurrentDirection(Direction.Right);
+                        stepHandler(snake);
+                        Collections.rotate(snake, 1);
                     }
                     break;
 
-                case SPACE:
-                    snake.Grow();
-                    root.getChildren().add(snake.get(snake.getLength() - 1));
-                    break;
-
-                case G:
-                    snake.setCurrentDirection(Direction.Stop);
                 default:
                     break;
             }
@@ -108,30 +135,6 @@ public class GameRunner extends Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
-
-        Thread gameThread = new Thread(snakeStepper);
-        gameThread.setDaemon(true);
-        gameThread.start();
-    }
-
-    public void drawGrid(int x, int y) { // Colours background
-        if (x > y) {
-            scalingConstant = 500 / (x);
-        } else {
-            scalingConstant = 500 / (y);
-        }
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < y; j++) {
-                Rectangle back = new Rectangle(i * scalingConstant, j * scalingConstant, scalingConstant,
-                        scalingConstant);
-                if (((i % 2 == 0) && (j % 2 == 0)) || ((i % 2 != 0) && (j % 2 != 0))) {
-                    back.setFill(Color.rgb(136, 91, 242));
-                } else {
-                    back.setFill(Color.rgb(109, 74, 191));
-                }
-                root.getChildren().add(back);
-            }
-        }
     }
 
     public void drawSnake(Snake snake) {
@@ -144,52 +147,29 @@ public class GameRunner extends Application {
 
     public void stepHandler(Snake snake) {
         Random rand = new Random();
-        Platform.runLater(() -> {
-            if (snake.selfCollide()) {
-                snake.setCurrentDirection(Direction.Stop);
-                // try {
-                // gameOver();
-                // } catch (FileNotFoundException e) {
-                // e.printStackTrace();
-                // }
-            }
-            if (snake.foodCollision(food)) {
-                boolean validSpawn = false;
-                int randX = 0;
-                int randY = 0;
-                while (!validSpawn) {
-                    randX = rand.nextInt(n) + 1;
-                    randY = rand.nextInt(m) + 1;
-                    for (int i = 0; i < snake.getLength(); i++) {
-                        if (snake.get(i).getX() / scalingConstant != randX
-                                && snake.get(i).getY() / scalingConstant != randY) {
-                            validSpawn = true;
-                        }
+        if (snake.selfCollide()) {
+            snake.setAlive(false);
+            snake.setCurrentDirection(Direction.Stop);
+            System.out.println("You are now dead your score was: " + snake.getScore());
+        }
+        if (snake.foodCollision(food)) {
+            boolean validSpawn = false;
+            int randX = 0;
+            int randY = 0;
+            while (!validSpawn) {
+                randX = rand.nextInt(n) + 1;
+                randY = rand.nextInt(m) + 1;
+                for (int i = 0; i < snake.getLength(); i++) {
+                    if (snake.get(i).getX() / scalingConstant != randX
+                            && snake.get(i).getY() / scalingConstant != randY) {
+                        validSpawn = true;
                     }
                 }
-                food.setXY(randX, randY);
-                eat();
             }
-            snake.moveSnake(snake.getDirr());
-        });
-    }
-
-    public void gameOver() throws FileNotFoundException {
-        Image gameover = new Image(new FileInputStream("GameOverScreen.jpg"));
-        ImageView imageView = new ImageView(gameover);
-        imageView.relocate(0, 0);
-        Button button = new Button("RESTART");
-        button.relocate(width / 2, height / 2);
-        root.getChildren().addAll(imageView, button);
-        EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent a) {
-                root.getChildren().clear();
-                drawGrid(n, m);
-                snake = new Snake(n, m, scalingConstant, Direction.Stop, 0, 2);
-                drawSnake(snake);
-            }
-        };
-        button.setOnAction(event);
+            food.setXY(randX, randY);
+            eat();
+        }
+        snake.moveSnake(snake.getDirr());
     }
 
     public void eat() {

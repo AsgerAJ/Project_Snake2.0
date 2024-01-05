@@ -10,6 +10,7 @@ public class Snake extends ArrayList<Rectangle> {
     private int y;
     private int score;
     private double sC;
+    private boolean alive;
 
     public Snake(int x, int y, double sC, Direction direction, int score, int startLength) {
         this.x = x;
@@ -18,11 +19,11 @@ public class Snake extends ArrayList<Rectangle> {
         this.score = score;
         for(int i = 0; i < startLength; i++){
             super.add(new Rectangle((x / 2+i) * sC, (y / 2) * sC, sC, sC));
-            super.get(i).setFill(Color.rgb(189, 217, 191));
         }
         this.direction = direction;
         //playerNumber++;
         // this.playerNumber = playerNumber;
+        this.alive = true;
     }
 
     public void moveSnake(Direction newDirection) {
@@ -79,7 +80,7 @@ public class Snake extends ArrayList<Rectangle> {
     public void Grow() {
         this.score++;
         super.add(new Rectangle(super.get(getLength() - 1).getX(), super.get(getLength() - 1).getY(), getSC(),getSC()));
-        super.get(getLength()-1).setFill(Color.rgb(189, 217, 191));
+        System.out.println("Score: " + getScore());
     }
 
     public boolean foodCollision(Rectangle food) {
@@ -99,6 +100,13 @@ public class Snake extends ArrayList<Rectangle> {
         return dead;
     }
 
+    public boolean getAlive(){
+        return this.alive;
+    }
+
+    public void setAlive(boolean alive){
+        this.alive = alive;
+    }
 
     public Direction getDirr() {
         return this.direction;
