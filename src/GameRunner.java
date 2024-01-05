@@ -83,7 +83,7 @@ public class GameRunner extends Application {
         Random foodCord = new Random();
 
         // Skal skrives ting til random koordinater
-        food = new Food(2, 2, scalingConstant);
+        food = new Food(foodCord.nextInt(n), foodCord.nextInt(m), scalingConstant);
         drawFood(food);
         snake = new Snake(n, m, scalingConstant, Direction.Stop, 0, 2);
         drawSnake(snake);
