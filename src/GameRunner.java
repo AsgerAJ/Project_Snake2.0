@@ -69,7 +69,6 @@ public class GameRunner extends Application {
             } catch (NumberFormatException e) {
                 m = 1;
             }
-
         }
 
         if (n > m) {
