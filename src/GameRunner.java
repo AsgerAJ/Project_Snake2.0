@@ -93,35 +93,30 @@ public class GameRunner extends Application {
 
         scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             KeyCode code = event.getCode();
-            KeyCode last = code;
-            KeyCode last2 = last;
+            snake.setTailCoords();
             switch (code) {
                 case UP:
                     if (snake.getDirr() != Direction.Down && snake.getAlive()) {
                         snake.setCurrentDirection(Direction.Up);
                         stepHandler(snake);
-                        Collections.rotate(snake, 1);
                     }
                     break;
                 case DOWN:
                     if (snake.getDirr() != Direction.Up && snake.getAlive()) {
                         snake.setCurrentDirection(Direction.Down);
                         stepHandler(snake);
-                        Collections.rotate(snake, 1);
                     }
                     break;
                 case LEFT:
                     if (snake.getDirr() != Direction.Right && snake.getAlive()) {
                         snake.setCurrentDirection(Direction.Left);
                         stepHandler(snake);
-                        Collections.rotate(snake, 1);
                     }
                     break;
                 case RIGHT:
                     if (snake.getDirr() != Direction.Left && snake.getAlive()) {
                         snake.setCurrentDirection(Direction.Right);
                         stepHandler(snake);
-                        Collections.rotate(snake, 1);
                     }
                     break;
 
@@ -146,12 +141,13 @@ public class GameRunner extends Application {
 
     public void stepHandler(Snake snake) {
         Random rand = new Random();
+        snake.moveSnake(snake.getDirr());
+        Collections.rotate(snake, 1);
         if (snake.selfCollide()) {
             snake.setAlive(false);
             snake.setCurrentDirection(Direction.Stop);
             System.out.println("You are now dead your score was: " + snake.getScore());
-        }
-        if (snake.foodCollision(food)) {
+        }else if (snake.foodCollision(food)) {
             boolean validSpawn = false;
             int randX = rand.nextInt(n);
             int randY = rand.nextInt(m);
@@ -168,12 +164,12 @@ public class GameRunner extends Application {
             }
             food.setXY(randX + 1, randY + 1);
             eat();
+            root.getChildren().add(snake.get(snake.size()-1));
         }
-        snake.moveSnake(snake.getDirr());
+
     }
 
     public void eat() {
         snake.Grow();
-        root.getChildren().add(snake.get(snake.getLength() - 1));
     }
 }

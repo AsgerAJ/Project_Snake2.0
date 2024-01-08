@@ -11,6 +11,8 @@ public class Snake extends ArrayList<Rectangle> {
     private int score;
     private double sC;
     private boolean alive;
+    private double tailX;
+    private double tailY;
 
     public Snake(int x, int y, double sC, Direction direction, int score, int startLength) {
         this.x = x;
@@ -24,6 +26,7 @@ public class Snake extends ArrayList<Rectangle> {
         //playerNumber++;
         // this.playerNumber = playerNumber;
         this.alive = true;
+        setTailCoords();
     }
 
     public void moveSnake(Direction newDirection) {
@@ -77,9 +80,9 @@ public class Snake extends ArrayList<Rectangle> {
         }
     }
 
-    public void Grow() {
+    public void Grow(){
+        super.add(new Rectangle(getTailCoordX(),getTailCoordY(),getSC(),getSC()));
         this.score++;
-        super.add(new Rectangle(super.get(getLength() - 1).getX(), super.get(getLength() - 1).getY(), getSC(),getSC()));
         System.out.println("Score: " + getScore());
     }
 
@@ -138,6 +141,19 @@ public class Snake extends ArrayList<Rectangle> {
 
     public int getLength() {
         return super.size();
+    }
+
+    public double getTailCoordX(){
+        return this.tailX;
+    }
+
+    public double getTailCoordY(){
+        return this.tailY;
+    }
+
+    public void setTailCoords(){
+        this.tailX = super.get(super.size()-1).getX();
+        this.tailY = super.get(super.size()-1).getY();
     }
 
 }
