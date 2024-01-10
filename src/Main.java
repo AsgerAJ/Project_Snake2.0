@@ -6,8 +6,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class GameRunner extends Application {
-
+public class Main extends Application {
     // Public variables
     public double scalingConstant;
     public double height;
