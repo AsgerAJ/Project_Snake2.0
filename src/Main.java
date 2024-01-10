@@ -27,44 +27,37 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         System.out.println("Welcome to the snake game");
         Scanner console = new Scanner(System.in);
-
         boolean nSet = false;
-        while (!nSet) {
+        boolean mSet = false;
+        String gridsizeString;
+        while (!nSet && !mSet) {
             if (n > 5 && n < 100) {
                 nSet = true;
                 break;
             } else {
                 System.out.print("Please enter the size of the n axis (greater than 5 & lesser than 100): ");
             }
-            String gridsizeString = console.next();
+            gridsizeString = console.next();
             try {
                 n = Integer.valueOf(gridsizeString) * 1;
             } catch (NumberFormatException e) {
                 n = 1;
             }
 
-        }
-        boolean mSet = false;
-        while (!mSet) {
             if (m > 5 && m < 100) {
                 nSet = true;
                 break;
             } else {
                 System.out.print("Please enter the size of the m axis (greater than 5 & lesser than 100): ");
             }
-            String gridsizeString = console.next();
+            gridsizeString = console.next();
             try {
                 m = Integer.valueOf(gridsizeString) * 1;
             } catch (NumberFormatException e) {
                 m = 1;
             }
         }
-
-        if (n > m) {
-            scalingConstant = 500 / (n);
-        } else {
-            scalingConstant = 500 / (m);
-        }
+        scalingConstant = (n > m) ? 500 / n : 500 / m;
 
         root = new Pane();
         root.setPrefSize(n, m);
@@ -90,18 +83,21 @@ public class Main extends Application {
                         stepHandler(snake);
                     }
                     break;
+
                 case DOWN:
                     if (snake.getDirr() != Direction.Up && snake.getAlive()) {
                         snake.setCurrentDirection(Direction.Down);
                         stepHandler(snake);
                     }
                     break;
+
                 case LEFT:
                     if (snake.getDirr() != Direction.Right && snake.getAlive()) {
                         snake.setCurrentDirection(Direction.Left);
                         stepHandler(snake);
                     }
                     break;
+
                 case RIGHT:
                     if (snake.getDirr() != Direction.Left && snake.getAlive()) {
                         snake.setCurrentDirection(Direction.Right);
@@ -137,10 +133,11 @@ public class Main extends Application {
             snake.setAlive(false);
             snake.setCurrentDirection(Direction.Stop);
             System.out.println("You are now dead your score was: " + snake.getScore());
-        }else if (snake.foodCollision(food)) {
+        } else if (snake.foodCollision(food)) {
             boolean validSpawn = false;
             int randX = rand.nextInt(n);
             int randY = rand.nextInt(m);
+            eat();
             while (!validSpawn) {
                 validSpawn = true;
                 randX = rand.nextInt(n);
@@ -153,7 +150,6 @@ public class Main extends Application {
                 }
             }
             food.setXY(randX + 1, randY + 1);
-            eat();
             root.getChildren().add(snake.get(snake.size()-1));
         }
     }
