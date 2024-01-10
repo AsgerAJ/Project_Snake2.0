@@ -2,7 +2,6 @@ import javafx.scene.shape.*;
 import java.util.*;
 
 public class Snake extends ArrayList<Rectangle> {
-
     private Direction direction;
     public int playerNumber = 0;
     private int x;
@@ -29,48 +28,29 @@ public class Snake extends ArrayList<Rectangle> {
     public void moveSnake(Direction newDirection) {
         switch (newDirection) {
             case Up:
-                if (get(0).getY() - getSC() < 0) {
-                    get(size() - 1).setY(getYlim() * getSC() - getSC());
-                    get(size() - 1).setX(get(0).getX());
-                } else {
-                    get(size() - 1).setY(get(0).getY() - getSC());
-                    get(size() - 1).setX(get(0).getX());
-                }
+                double update = (get(0).getY() - getSC() < 0) ? getYlim() * getSC() - getSC() : get(0).getY() - getSC();
+                get(size() - 1).setY(update);
+                get(size() - 1).setX(get(0).getX());
                 break;
 
             case Down:
-                if (get(0).getY() + getSC() > getYlim() * getSC()- sC) {
-                    get(size() - 1).setY(0);
-                    get(size() - 1).setX(get(0).getX());
-                } else {
-                    get(size() - 1).setY(get(0).getY() + getSC());
-                    get(size() - 1).setX(get(0).getX());
-                }
+                update = (get(0).getY() + getSC() > getYlim() * getSC()- sC) ? 0 : get(0).getY() + getSC();
+                get(size() - 1).setY(update);
+                get(size() - 1).setX(get(0).getX());
                 break;
 
             case Left:
-                if (get(0).getX() - getSC() < 0) {
-                    get(size() - 1).setX(getXlim() * getSC() - getSC());
-                    get(size() - 1).setY(get(0).getY());
-                } else {
-                    get(size() - 1).setX(get(0).getX() - getSC());
-                    get(size() - 1).setY(get(0).getY());
-                }
+                update = (get(0).getX() - getSC() < 0) ? getXlim() * getSC() - getSC() : get(0).getX() - getSC();
+                get(size() - 1).setX(update);
+                get(size() - 1).setY(get(0).getY());
                 break;
 
             case Right:
-                if (get(0).getX() + getSC() > getXlim() * getSC()-sC) {
-                    get(size() - 1).setX(0);
-                    get(size() - 1).setY(get(0).getY());
-                } else {
-                    get(size() - 1).setX(get(0).getX() + getSC());
-                    get(size() - 1).setY(get(0).getY());
-                }
-
+                update = (get(0).getX() + getSC() > getXlim() * getSC()-sC) ? 0 : get(0).getX() + getSC();
+                get(size() - 1).setX(update);
+                get(size() - 1).setY(get(0).getY());
                 break;
 
-            case Stop:
-                break;
             default:
                 break;
         }
