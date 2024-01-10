@@ -95,7 +95,7 @@ public class Snake extends ArrayList<Rectangle> {
 
     public boolean selfCollide(){
         boolean dead = false;
-        for (int i = 1; i < getLength()-1; i++){
+        for (int i = 1; i < getLength(); i++){
             if((get(i).getX() == get(0).getX()) && (get(i).getY() == get(0).getY()) ){
                 return dead = true;
             }

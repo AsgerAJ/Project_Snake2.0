@@ -166,7 +166,6 @@ public class GameRunner extends Application {
             eat();
             root.getChildren().add(snake.get(snake.size()-1));
         }
-
     }
 
     public void eat() {
