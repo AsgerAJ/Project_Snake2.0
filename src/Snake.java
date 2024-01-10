@@ -1,4 +1,3 @@
-import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import java.util.*;
 
@@ -23,15 +22,12 @@ public class Snake extends ArrayList<Rectangle> {
             super.add(new Rectangle((x / 2+i) * sC, (y / 2) * sC, sC, sC));
         }
         this.direction = direction;
-        //playerNumber++;
-        // this.playerNumber = playerNumber;
         this.alive = true;
         setTailCoords();
     }
 
     public void moveSnake(Direction newDirection) {
         switch (newDirection) {
-
             case Up:
                 if (get(0).getY() - getSC() < 0) {
                     get(size() - 1).setY(getYlim() * getSC() - getSC());
@@ -155,5 +151,4 @@ public class Snake extends ArrayList<Rectangle> {
         this.tailX = super.get(super.size()-1).getX();
         this.tailY = super.get(super.size()-1).getY();
     }
-
 }

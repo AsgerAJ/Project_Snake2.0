@@ -1,20 +1,10 @@
 import java.util.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.Button;
 
 public class GameRunner extends Application {
 
@@ -129,6 +119,7 @@ public class GameRunner extends Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
+        console.close();
     }
 
     public void drawSnake(Snake snake) {
