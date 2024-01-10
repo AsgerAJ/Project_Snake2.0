@@ -32,7 +32,7 @@ public class Main extends Application {
         boolean mSet = false;
         String gridsizeString;
         while (!nSet && !mSet) {
-            if (n > 5 && n < 100) {
+            if (n >= 5 && n <= 100) {
                 nSet = true;
                 break;
             } else {

@@ -28,26 +28,22 @@ public class Snake extends ArrayList<Rectangle> {
     public void moveSnake(Direction newDirection) {
         switch (newDirection) {
             case Up:
-                double update = (get(0).getY() - getSC() < 0) ? getYlim() * getSC() - getSC() : get(0).getY() - getSC();
-                get(size() - 1).setY(update);
+                get(size() - 1).setY((get(0).getY() - getSC() < 0) ? getYlim() * getSC() - getSC() : get(0).getY() - getSC());
                 get(size() - 1).setX(get(0).getX());
                 break;
 
             case Down:
-                update = (get(0).getY() + getSC() > getYlim() * getSC()- sC) ? 0 : get(0).getY() + getSC();
-                get(size() - 1).setY(update);
+                get(size() - 1).setY((get(0).getY() + getSC() > getYlim() * getSC()- sC) ? 0 : get(0).getY() + getSC());
                 get(size() - 1).setX(get(0).getX());
                 break;
 
             case Left:
-                update = (get(0).getX() - getSC() < 0) ? getXlim() * getSC() - getSC() : get(0).getX() - getSC();
-                get(size() - 1).setX(update);
+                get(size() - 1).setX((get(0).getX() - getSC() < 0) ? getXlim() * getSC() - getSC() : get(0).getX() - getSC());
                 get(size() - 1).setY(get(0).getY());
                 break;
 
             case Right:
-                update = (get(0).getX() + getSC() > getXlim() * getSC()-sC) ? 0 : get(0).getX() + getSC();
-                get(size() - 1).setX(update);
+                get(size() - 1).setX((get(0).getX() + getSC() > getXlim() * getSC()-sC) ? 0 : get(0).getX() + getSC());
                 get(size() - 1).setY(get(0).getY());
                 break;
 
