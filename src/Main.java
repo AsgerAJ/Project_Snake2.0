@@ -13,6 +13,7 @@ public class Main extends Application {
     public double width;
     public int n;
     public int m;
+    public boolean firstMove = true;
 
     // Private variables
     private Pane root;
@@ -78,14 +79,14 @@ public class Main extends Application {
             snake.setTailCoords();
             switch (code) {
                 case UP:
-                    if (snake.getDirr() != Direction.Down && snake.getAlive()) {
+                    if (!firstMove && snake.getDirr() != Direction.Down && snake.getAlive()) {
                         snake.setCurrentDirection(Direction.Up);
                         stepHandler(snake);
                     }
                     break;
 
                 case DOWN:
-                    if (snake.getDirr() != Direction.Up && snake.getAlive()) {
+                    if (!firstMove && snake.getDirr() != Direction.Up && snake.getAlive()) {
                         snake.setCurrentDirection(Direction.Down);
                         stepHandler(snake);
                     }
@@ -95,11 +96,12 @@ public class Main extends Application {
                     if (snake.getDirr() != Direction.Right && snake.getAlive()) {
                         snake.setCurrentDirection(Direction.Left);
                         stepHandler(snake);
+                        firstMove = false;
                     }
                     break;
 
                 case RIGHT:
-                    if (snake.getDirr() != Direction.Left && snake.getAlive()) {
+                    if (!firstMove && snake.getDirr() != Direction.Left && snake.getAlive()) {
                         snake.setCurrentDirection(Direction.Right);
                         stepHandler(snake);
                     }
@@ -127,7 +129,9 @@ public class Main extends Application {
 
     public void stepHandler(Snake snake) {
         Random rand = new Random();
-        snake.moveSnake(snake.getDirr());
+        if(!firstMove || snake.getDirr() == Direction.Left) {
+            snake.moveSnake(snake.getDirr());
+        }
         Collections.rotate(snake, 1);
         if (snake.selfCollide()) {
             snake.setAlive(false);
